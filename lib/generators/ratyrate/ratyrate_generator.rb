@@ -23,15 +23,15 @@ class RatyrateGenerator < ActiveRecord::Generators::Base
   def create_model
     model_file = File.join('app/models', "#{file_path}.rb")
     raise "User model (#{model_file}) must exits." unless File.exists?(model_file)
-    class_collisions 'Rate'
-    template 'model.rb', File.join('app/models', "rate.rb")
+    class_collisions 'Rating'
+    template 'model.rb', File.join('app/models', "rating.rb")
     template 'cache_model.rb', File.join('app/models', "rating_cache.rb")
     template 'average_cache_model.rb', File.join('app/models', "average_cache.rb")
     template 'overall_average_model.rb', File.join('app/models', "overall_average.rb")
   end
 
   def add_rate_path_to_route
-    route "post '/rate' => 'rater#create', :as => 'rate'"
+    route "post '/rating' => 'rater#create', :as => 'rating'"
   end
 
   desc "cacheable rating average migration is creating ..."

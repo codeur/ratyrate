@@ -90,7 +90,7 @@ module Ratyrate
 
     # calculates the movie overall average rating for all users
     def calculate_overall_average
-      rating = Rate.where(rateable: self).pluck('stars')
+      rating = Rating.where(rateable: self).pluck('stars')
       (rating.reduce(:+).to_f / rating.size).round(1)
     end
 
@@ -117,11 +117,11 @@ module Ratyrate
     module ClassMethods
 
       def ratyrate_rater
-        has_many :ratings_given, class_name: 'Rate', foreign_key: :rater_id
+        has_many :ratings_given, class_name: 'Rating', foreign_key: :rater_id
       end
 
       def ratyrate_rateable(*dimensions)
-        has_many :rates_without_dimension, -> { where dimension: nil}, as: :rateable, class_name: 'Rate', dependent: :destroy
+        has_many :rates_without_dimension, -> { where dimension: nil}, as: :rateable, class_name: 'Rating', dependent: :destroy
         has_many :raters_without_dimension, through: :rates_without_dimension, source: :rater
 
         has_one :rate_average_without_dimension, -> { where dimension: nil}, as: :cacheable,
@@ -130,7 +130,7 @@ module Ratyrate
         dimensions.each do |dimension|
           has_many "#{dimension}_rates".to_sym, -> {where dimension: dimension.to_s},
                                                 dependent: :destroy,
-                                                class_name: 'Rate',
+                                                class_name: 'Rating',
                                                 as: :rateable
 
           has_many "#{dimension}_raters".to_sym, through: :"#{dimension}_rates", source: :rater
