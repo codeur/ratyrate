@@ -107,7 +107,7 @@ module Ratyrate
     end
 
     def rates(dimension=nil)
-      dimension ? self.send("#{dimension}_rates") : rates_without_dimension
+      dimension ? self.send("#{dimension}_ratings") : rates_without_dimension
     end
 
     def raters(dimension=nil)
@@ -128,12 +128,12 @@ module Ratyrate
                 class_name: 'RatingCache', dependent: :destroy
 
         dimensions.each do |dimension|
-          has_many "#{dimension}_rates".to_sym, -> {where dimension: dimension.to_s},
+          has_many "#{dimension}_ratings".to_sym, -> {where dimension: dimension.to_s},
                                                 dependent: :destroy,
                                                 class_name: 'Rating',
                                                 as: :rateable
 
-          has_many "#{dimension}_raters".to_sym, through: :"#{dimension}_rates", source: :rater
+          has_many "#{dimension}_raters".to_sym, through: :"#{dimension}_ratings", source: :rater
 
           has_one "#{dimension}_average".to_sym, -> { where dimension: dimension.to_s },
                                                 as: :cacheable,
